@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncLab - Responsables por Equipo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos Generales - Mismos estilos que la interfaz de Equipos Médicos */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        /* Contenedor Principal */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 2. Navegación Lateral (Menú) */
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50; /* Azul oscuro */
+            color: white;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5em;
+            color: #ecf0f1;
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-left: 5px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item:hover {
+            background-color: #34495e;
+        }
+
+        /* La sección "Responsables" está activa ahora */
+        .menu-item.active {
+            background-color: #1abc9c; /* Verde/Cian para activo */
+            border-left: 5px solid #2ecc71;
+            font-weight: bold;
+        }
+
+        /* Área de Contenido Principal */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+        }
+
+        /* 1. Cabecera y Título */
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .header h1 span {
+            font-weight: normal;
+            font-size: 0.8em;
+            margin-right: 15px;
+            color: #1abc9c;
+        }
+
+        /* 3. Funcionalidad de Búsqueda */
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 10px 15px 10px 40px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            font-size: 1em;
+            outline: none;
+            /* Ícono de lupa como fondo */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="%23999" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: 10px center;
+        }
+        
+        /* 4. Tabla de Datos (Listado de Responsables) */
+        .table-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table th {
+            background-color: #ecf0f1;
+            color: #333;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        .data-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        /* 5. Opciones de Gestión y Acción */
+        .action-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn-purple {
+            background-color: #8e44ad; /* Morado */
+            color: white;
+        }
+
+        .btn-purple:hover {
+            background-color: #9b59b6;
+        }
+
+        .delete-area {
+            background-color: #ffebee;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #e74c3c;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .delete-area label {
+            font-weight: 600;
+            color: #c0392b;
+        }
+
+        .delete-area input[type="text"] {
+            padding: 8px;
+            border: 1px solid #e74c3c;
+            border-radius: 3px;
+            font-size: 1em;
+        }
+
+        .btn-red {
+            background-color: #e74c3c; /* Rojo */
+            color: white;
+            align-self: flex-start;
+        }
+
+        .btn-red:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="sidebar">
+        <h3>SyncLab</h3>
+        <div class="menu">
+            <div class="menu-item"><i class="fas fa-home"></i> Inicio</div>
+            <div class="menu-item"><i class="fas fa-map-marker-alt"></i> Ubicaciones</div>
+            <div class="menu-item"><i class="fas fa-medkit"></i> Equipo médico</div>
+            <div class="menu-item active"><i class="fas fa-user-tag"></i> Responsables</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1><span><i class="fas fa-user-tag"></i></span> Responsables por equipo</h1>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar por nombre, documento de identidad o código asignado">
+        </div>
+
+        <div class="table-container">
+            <h2>Listado de Responsables</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Código</th>
+                        <th>Documento de identidad</th>
+                        <th>Nombre y apellidos</th>
+                        <th>Cargo</th>
+                        <th>Teléfono</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>R-001</td>
+                        <td>101567890</td>
+                        <td>María Fernanda López</td>
+                        <td>Auxiliar</td>
+                        <td>3001234567</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>R-002</td>
+                        <td>908765432</td>
+                        <td>Juan Carlos Pérez</td>
+                        <td>Especialista</td>
+                        <td>3109876543</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>R-003</td>
+                        <td>123456789</td>
+                        <td>Ana Belén Castro</td>
+                        <td>Jefe de área</td>
+                        <td>3201122334</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>R-004</td>
+                        <td>203948576</td>
+                        <td>Luis Alberto Ramírez</td>
+                        <td>Secretaria</td>
+                        <td>3154455667</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>R-005</td>
+                        <td>345678901</td>
+                        <td>Laura Marcela Díaz</td>
+                        <td>Auxiliar</td>
+                        <td>3017788990</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="action-section">
+            <button class="btn btn-purple">
+                <i class="fas fa-plus"></i> CREAR / ACTUALIZAR REGISTRO
+            </button>
+
+            <div class="delete-area">
+                <label for="codigo-eliminar">Escriba el **código** asignado del registro a **ELIMINAR**:</label>
+                <input type="text" id="codigo-eliminar" placeholder="Ej: R-001">
+                <button class="btn btn-red">
+                    <i class="fas fa-trash-alt"></i> ELIMINAR
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

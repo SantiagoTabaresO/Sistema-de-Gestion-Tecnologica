@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncLab - Ubicaciones Registro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos Generales */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Contenedor Principal del Formulario */
+        .registro-container {
+            width: 100%;
+            max-width: 600px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Título Principal */
+        .header h1 {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        /* Advertencia Importante */
+        .warning-box {
+            background-color: #fce4ec; /* Rosa claro/suave */
+            color: #c2185b; /* Rojo oscuro para texto de advertencia */
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid #e91e63;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        /* Estilo de los Campos del Formulario */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box; /* Asegura que padding no afecte el ancho total */
+            transition: border-color 0.3s;
+        }
+
+        .form-group input[type="text"]:focus {
+            border-color: #8e44ad; /* Color morado al enfocar */
+            outline: none;
+        }
+
+        /* Botones de Acción */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.1s;
+            flex-grow: 1; /* Distribuye el espacio equitativamente */
+        }
+
+        /* Botones Crear y Actualizar (Morado) */
+        .btn-purple {
+            background-color: #8e44ad;
+            color: white;
+        }
+
+        .btn-purple:hover {
+            background-color: #9b59b6;
+            transform: translateY(-1px);
+        }
+
+        /* Botón Cancelar (Rojo) */
+        .btn-red {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-red:hover {
+            background-color: #c0392b;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+
+<div class="registro-container">
+    <div class="header">
+        <h1>UBICACIONES REGISTRO</h1>
+    </div>
+
+    <div class="warning-box">
+        <i class="fas fa-exclamation-triangle"></i> 
+        **ADVERTENCIA:** Presionar la opción **ACTUALIZAR** sobreescribirá la información de registros ya creados.
+    </div>
+
+    <form>
+        <div class="form-group">
+            <label for="codigo">Código:</label>
+            <input type="text" id="codigo" value="00002" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="ubicacion">Ubicación:</label>
+            <input type="text" id="ubicacion" value="Ginecología">
+        </div>
+
+        <div class="form-group">
+            <label for="localizacion">Localización (actual):</label>
+            <input type="text" id="localizacion" value="Consultorio 16">
+        </div>
+
+        <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" value="3902432739">
+        </div>
+
+        <div class="action-buttons">
+            <button type="submit" class="btn btn-purple">
+                <i class="fas fa-plus"></i> Crear
+            </button>
+            <button type="submit" class="btn btn-purple">
+                <i class="fas fa-sync-alt"></i> Actualizar
+            </button>
+            <button type="button" class="btn btn-red">
+                <i class="fas fa-times-circle"></i> Cancelar
+            </button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
