@@ -38,7 +38,7 @@
 
                     <div class="btn-group" role="group" aria-label="Button group name">
                         <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                        <router-link :to="{name:'ResponsablesView'}" class="btn btn-danger">Cancelar</router-link>
+                        <router-link :to="{name:'responsablesView'}" class="btn btn-danger">Cancelar</router-link>
                     </div>
 
                 </form> 
@@ -67,7 +67,7 @@
                 const idResponsable = this.$route.params.id;
 
                 // URL: Se apunta al endpoint de responsables y se usa 'consultar'
-                fetch(`http://localhost/ResponsablesView/?consultar=${idResponsable}`)
+                fetch(fetch(`http://localhost/sist_gestion/index.php?resource=responsables&consultar=${idResponsable}`))
                 .then(respuesta=>respuesta.json())
                 .then((datosRespuesta)=>{
                     console.log(datosRespuesta)
@@ -102,7 +102,7 @@
                 }
 
                 // URL: Se apunta al endpoint de responsables y se usa 'actualizar'
-                fetch(`http://localhost/ResponsablesView/?actualizar=${this.$route.params.id}`,{
+                fetch(`http://localhost/sist_gestion/index.php?resource=responsables&actualizar=${this.$route.params.id}`,{ 
                     method:'POST',
                     body:JSON.stringify(datosEnviar)
                 })
@@ -110,7 +110,7 @@
                 .then(datosRespuesta=>{
                     console.log(datosRespuesta);
                     // Navegar de vuelta a la vista de listado
-                    this.$router.push({name:'ResponsablesView'}); 
+                    this.$router.push({ name: 'responsablesView' });
 
                 })
                 .catch(console.error)
