@@ -5,9 +5,12 @@
       <div class="sidebar">
         <h3>SyncLab</h3>
         <div class="menu">
-          <router-link to="/" class="menu-item" active-class="active">
-            <i class="fas fa-home"></i> Inicio
+
+
+          <router-link to="/InicioView" class="menu-item" active-class="active">
+            <i class="fas fa-map-marker-alt"></i> Inicio
           </router-link>
+          
 
           <router-link to="/UbicacionesView" class="menu-item" active-class="active">
             <i class="fas fa-map-marker-alt"></i> Ubicaciones

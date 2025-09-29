@@ -5,6 +5,7 @@ import UbicacionesView from '@/components/UbicacionesView.vue'
 import EditarRespView from '@/components/EditarRespView.vue'
 import EditarUbicacionView from '@/components/EditarUbicacionView.vue'
 import CrearUbicacionView from '@/components/CrearUbicacionView.vue'
+import InicioView from '@/components/InicioView.vue'
 
 const routes = [
   {
@@ -35,6 +36,11 @@ const routes = [
     path: "/ubicaciones/crear",
     name: "CrearUbicacionView",   
     component: CrearUbicacionView,
+  },
+  {
+    path: "/inicioView",
+    name: "InicioView",   
+    component: InicioView,
   },
   {
     path: '/about',
