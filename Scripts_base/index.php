@@ -3,7 +3,10 @@
 TAKEN FORM: https://github.com/oscaruhp/empleados
 AUTHOR: Oscar Uh
 
-MODIFIED AND ADAPTED BY: Santiago Tabares
+MODIFIED AND ADAPTED BY: 
+Santiago Tabares
+Daniel Tamayo
+Paulina Arias
 
 */
 header("Access-Control-Allow-Origin: *");
@@ -17,9 +20,15 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 $servidor = "localhost"; 
 $usuario = "root"; 
 $passwd = ""; 
-$nombreBaseDatos = "equipos";
+$nombreBaseDatos = "sist_gestion";
 $conexionBD = new mysqli($servidor, $usuario, $passwd, $nombreBaseDatos);
 
+/**
+ * Escapes a string for safe use in SQL queries.
+ */
+function esc($conn, $str) {
+    return mysqli_real_escape_string($conn, $str);
+}
 
 // ---------------- UBICACIONES ----------------
 if (isset($_GET["resource"]) && $_GET["resource"] === "ubicaciones") {
@@ -131,7 +140,7 @@ if (isset($_GET["resource"]) && $_GET["resource"] === "responsables") {
 }
 
 // ---------------- EQUIPOS MÉDICOS ----------------
-if (isset($_GET["resource"]) && $_GET["resource"] === "equipos") {
+if (isset($_GET["resource"]) && $_GET["resource"] === "equipos_medicos") {
 
     if (isset($_GET["consultar"])) {
         $id = intval($_GET["consultar"]);
