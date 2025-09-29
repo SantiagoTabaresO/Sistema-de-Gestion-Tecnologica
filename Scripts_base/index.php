@@ -133,12 +133,37 @@ if (isset($_GET["resource"]) && $_GET["resource"] === "responsables") {
         exit();
     }
 
+    // if (isset($_GET["borrar"])) {
+    //     $id = intval($_GET["borrar"]);
+    //     $sql = mysqli_query($conexionBD, "DELETE FROM responsables WHERE id=$id");
+    //     echo json_encode(["success" => $sql ? 1 : 0]);
+    //     exit();
+    // }}
+
     if (isset($_GET["borrar"])) {
-        $id = intval($_GET["borrar"]);
-        $sql = mysqli_query($conexionBD, "DELETE FROM responsables WHERE id=$id");
-        echo json_encode(["success" => $sql ? 1 : 0]);
-        exit();
+    $codigo = mysqli_real_escape_string($conexionBD, $_GET["borrar"]);
+    $sql = mysqli_query($conexionBD, "DELETE FROM responsables WHERE codigo_asignado='$codigo'");
+    echo json_encode(["success" => $sql ? 1 : 0]);
+    exit();
     }
+
+    // if (isset($_GET["borrar"])) {
+    // $codigo = mysqli_real_escape_string($conexionBD, $_GET["borrar"]);
+    // $sql = mysqli_query($conexionBD, "DELETE FROM responsables WHERE codigo_asignado='$codigo'");
+
+    // if ($sql) {
+    //     if (mysqli_affected_rows($conexionBD) > 0) {
+    //         echo json_encode(["success" => 1]);
+    //     } else {
+    //         echo json_encode(["success" => 0, "error" => "No se encontró ningún registro con ese código."]);
+    //     }
+    // } else {
+    //     echo json_encode(["success" => 0, "error" => "Error en la consulta SQL."]);
+    // }
+    // exit();
+    // }
+
+
 
     if (isset($_GET["insertar"])) {
         $data = json_decode(file_get_contents("php://input"));

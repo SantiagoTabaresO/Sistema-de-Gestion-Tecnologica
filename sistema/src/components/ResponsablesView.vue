@@ -5,7 +5,7 @@
     <div class="main-content">
       <!-- Header -->
       <div class="header">
-        <h1><span><i class="fas fa-user-tag"></i></span> Responsables por equipo</h1>
+        <h1><span><i class="fas fa-user-tag"></i></span> Responsables</h1>
       </div>
 
       <!-- Search -->
@@ -13,7 +13,7 @@
         <input
           type="text"
           v-model="busqueda"
-          placeholder="Buscar por nombre, documento de identidad o código asignado 🔍"
+          placeholder="Buscar por nombre, documento de identidad o código asignado"
         />
       </div>
 
@@ -85,6 +85,9 @@
   </div>
 </template>
 
+
+
+
 <script>
 export default {
   data() {
@@ -101,11 +104,12 @@ export default {
     responsablesFiltrados() {
       if (!this.busqueda) return this.responsables
       const filtro = this.busqueda.toLowerCase()
-      return this.responsables.filter(r =>
-        r.nombre_apellidos.toLowerCase().includes(filtro) ||
-        r.documento_identidad.toLowerCase().includes(filtro) ||
-        r.codigo_asignado.toLowerCase().includes(filtro)
-      )
+      return this.responsables.filter(r => {
+        const nom = (r.nombre_apellidos || '').toString().toLowerCase()
+        const doc = (r.documento_identidad || '').toString().toLowerCase()
+        const cod = (r.codigo_asignado || '').toString().toLowerCase()
+        return nom.includes(filtro) || doc.includes(filtro) || cod.includes(filtro)
+      })
     }
   },
   methods: {
@@ -121,50 +125,62 @@ export default {
         })
         .catch(err => console.error('Error al consultar responsables:', err))
     },
-    borrarResponsablePorCodigo() {
-      const codigo = this.codigoAEliminar
+    async borrarResponsablePorCodigo() {
+      const codigo = (this.codigoAEliminar || '').trim()
       if (!codigo) return
-      const responsable = this.responsables.find(r => r.codigo_asignado === codigo)
-      if (responsable && responsable.id) {
-        if (confirm(`¿Está seguro de eliminar al responsable con código ${codigo}?`)) {
-          fetch(`http://localhost/sist_gestion/index.php?resource=responsables&borrar=${responsable.id}`)
-            .then(res => res.json())
-            .then(() => {
-              this.consultarResponsables()
-              this.codigoAEliminar = ''
-            })
-            .catch(err => console.error('Error al borrar responsable:', err))
+
+      if (!confirm(`¿Está seguro de eliminar al responsable con código ${codigo}?`)) return
+
+      try {
+        const resp = await fetch(
+        `http://localhost/sist_gestion/index.php?resource=responsables&borrar=${encodeURIComponent(codigo)}`,
+        { method: 'GET' }
+        )
+
+        const datos = await resp.json()
+        console.log('Respuesta borrado:', datos)
+
+        if (datos && (datos.success === true || datos.success === 1 || datos.success === "1")) {
+        this.consultarResponsables()
+        this.codigoAEliminar = ''
+        alert(datos.message || 'Registro eliminado correctamente.')
+        } else {
+        const mensaje = datos && datos.message ? datos.message : 'No se pudo eliminar el registro (no encontrado).'
+        alert(mensaje)
         }
-      } else {
-        alert(`No se encontró un responsable con el código: ${codigo}`)
+
+      } catch (err) {
+        console.error('Error al borrar responsable:', err)
+        alert('Error al eliminar el registro. Revisa la consola y network.')
       }
     }
   }
 }
 </script>
 
+
 <style scoped>
 /* --------- Estructura General --------- */
 .dashboard-container {
   display: flex;
   min-height: 100vh;
-  background-color: #f4f7f6;
+  background-color:#f4f7f6;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* --------- Sidebar --------- */
 .sidebar {
   width: 250px;
-  background-color: #2c3e50;
+  background-color:#2c3e50;
   color: white;
   padding: 20px 0;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  box-shadow: 2px 0 5pxrgba(0,0,0,0.1);
 }
 .sidebar h3 {
   text-align: center;
   margin-bottom: 30px;
   font-size: 1.5em;
-  color: #ecf0f1;
+  color:#ecf0f1;
 }
 .menu-item {
   padding: 15px 20px;
@@ -175,11 +191,11 @@ export default {
   gap: 10px;
 }
 .menu-item:hover {
-  background-color: #34495e;
+  background-color:#34495e;
 }
 .menu-item.active {
-  background-color: #1abc9c;
-  border-left: 5px solid #2ecc71;
+  background-color:#1abc9c;
+  border-left: 5px solid#2ecc71;
   font-weight: bold;
 }
 
@@ -193,7 +209,7 @@ export default {
 }
 .header h1 {
   font-size: 2.5em;
-  color: #2c3e50;
+  color:#2c3e50;
   margin: 0;
   display: flex;
   align-items: center;
@@ -201,7 +217,7 @@ export default {
 .header h1 span {
   font-size: 0.8em;
   margin-right: 15px;
-  color: #1abc9c;
+  color:#1abc9c;
 }
 
 /* --------- Search Bar --------- */
@@ -211,7 +227,7 @@ export default {
 .search-bar input {
   padding: 10px 15px 10px 40px;
   width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid#ccc;
   border-radius: 20px;
   font-size: 1em;
   outline: none;
@@ -225,34 +241,48 @@ export default {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4pxrgba(0,0,0,0.05);
   overflow-x: auto;
+
+  max-height: 350px;
+  overflow-y: auto;
+  display: block;
 }
+
 .data-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
 }
-.data-table th, .data-table td {
+
+.data-table thead {
+  position: sticky;
+  top: 0;
+  background:#ecf0f1; 
+  z-index: 2;
+}
+
+.data-table th,
+.data-table td {
   padding: 12px 15px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid#eee;
 }
 .data-table th {
-  background-color: #ecf0f1;
+  background-color:#ecf0f1;
   color: #333;
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.9em;
 }
 .data-table tr:hover {
-  background-color: #f9f9f9;
+  background-color:#f9f9f9;
 }
 
 /* --------- Actions --------- */
 .action-section {
   margin-top: 30px;
   padding-top: 20px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid#ddd;
   display: flex;
   gap: 20px;
   align-items: flex-start;
@@ -266,37 +296,37 @@ export default {
   transition: background-color 0.3s;
 }
 .btn-purple {
-  background-color: #8e44ad;
+  background-color:#8e44ad;
   color: white;
 }
 .btn-purple:hover {
-  background-color: #9b59b6;
+  background-color:#9b59b6;
 }
 .delete-area {
-  background-color: #ffebee;
+  background-color:#ffebee;
   padding: 15px;
   border-radius: 5px;
-  border: 1px solid #e74c3c;
+  border: 1px solid#e74c3c;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 .delete-area label {
   font-weight: 600;
-  color: #c0392b;
+  color:#c0392b;
 }
 .delete-area input {
   padding: 8px;
-  border: 1px solid #e74c3c;
+  border: 1px solid#e74c3c;
   border-radius: 3px;
   font-size: 1em;
 }
 .btn-red {
-  background-color: #e74c3c;
+  background-color:#e74c3c;
   color: white;
   align-self: flex-start;
 }
 .btn-red:hover {
-  background-color: #c0392b;
+  background-color:#c0392b;
 }
 </style>

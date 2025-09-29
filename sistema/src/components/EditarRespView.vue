@@ -1,92 +1,86 @@
 <template>
-  <div class="container mt-4">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
+  <div class="dashboard-container">
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Header -->
+      <div class="header">
+        <h1>
+          <span><i class="fas fa-user-edit"></i></span> Editar Responsable
+        </h1>
+      </div>
 
-        <div class="card shadow-sm">
-          <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Editar Responsable</h5>
+      <!-- Formulario -->
+      <div class="form-container">
+        <form @submit.prevent="actualizarRegistro" class="edit-form">
+          
+          <!-- Código Asignado -->
+          <div class="form-group">
+            <label for="codigo_asignado">Código Asignado</label>
+            <input
+              type="text"
+              required
+              id="codigo_asignado"
+              v-model="responsable.codigo_asignado"
+              @input="agregarPrefijo"
+            />
           </div>
 
-          <div class="card-body">
-            <form v-on:submit.prevent="actualizarRegistro">
-              
-              <div class="mb-3">
-                <label for="codigo_asignado" class="form-label">Código Asignado</label>
-                <input
-                    type="text"
-                    required
-                    class="form-control"
-                    id="codigo_asignado"
-                    v-model="responsable.codigo_asignado"
-                    @input="agregarPrefijo"
-                />
-                </div>
-
-
-              <div class="mb-3">
-                <label for="documento_identidad" class="form-label">Documento Identidad</label>
-                <input
-                    type="number"
-                    required
-                    class="form-control"
-                    id="documento_identidad"
-                    v-model="responsable.documento_identidad"
-                    min="0"
-                />
-                </div>
-
-
-              <div class="mb-3">
-                <label for="nombre_apellidos" class="form-label">Nombre Completo</label>
-                <input
-                  type="text"
-                  required
-                  class="form-control"
-                  id="nombre_apellidos"
-                  v-model="responsable.nombre_apellidos"
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="cargo" class="form-label">Cargo</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="cargo"
-                  v-model="responsable.cargo"
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="telefono" class="form-label">Teléfono</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="telefono"
-                  v-model="responsable.telefono"
-                />
-              </div>
-
-              <div class="d-flex justify-content-between mt-4">
-                <button type="submit" class="btn btn-success px-4">
-                  💾 Guardar Cambios
-                </button>
-                <router-link
-                  :to="{ name: 'responsablesView' }"
-                  class="btn btn-outline-danger px-4"
-                >
-                  ❌ Cancelar
-                </router-link>
-              </div>
-            </form>
+          <!-- Documento Identidad -->
+          <div class="form-group">
+            <label for="documento_identidad">Documento Identidad</label>
+            <input
+              type="number"
+              required
+              id="documento_identidad"
+              v-model="responsable.documento_identidad"
+              min="0"
+            />
           </div>
 
-          <div class="card-footer text-muted text-end">
-            @IngdeSw
+          <!-- Nombre Completo -->
+          <div class="form-group">
+            <label for="nombre_apellidos">Nombre Completo</label>
+            <input
+              type="text"
+              required
+              id="nombre_apellidos"
+              v-model="responsable.nombre_apellidos"
+            />
           </div>
-        </div>
 
+          <!-- Cargo -->
+          <div class="form-group">
+            <label for="cargo">Cargo</label>
+            <input
+              type="text"
+              id="cargo"
+              v-model="responsable.cargo"
+            />
+          </div>
+
+          <!-- Teléfono -->
+          <div class="form-group">
+            <label for="telefono">Teléfono</label>
+            <input
+              type="number"
+              id="telefono"
+              v-model="responsable.telefono"
+            />
+          </div>
+
+          <!-- Botones -->
+          <div class="form-actions">
+            <button type="submit" class="btn btn-green">
+              <i class="fas fa-save"></i> Guardar Cambios
+            </button>
+            <router-link
+              :to="{ name: 'responsablesView' }"
+              class="btn btn-red-outline"
+            >
+              <i class="fas fa-times"></i> Cancelar
+            </router-link>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -105,7 +99,7 @@ export default {
       }
     };
   },
-  created: function () {
+  created() {
     this.obtenerResponsableID();
   },
   methods: {
@@ -131,9 +125,10 @@ export default {
         .catch(console.error);
     },
     agregarPrefijo() {
-        if (!this.responsable.codigo_asignado.startsWith("R-")) {
-        this.responsable.codigo_asignado = "R-" + this.responsable.codigo_asignado.replace(/^R-/, "");
-        }
+      if (!this.responsable.codigo_asignado.startsWith("R-")) {
+        this.responsable.codigo_asignado =
+          "R-" + this.responsable.codigo_asignado.replace(/^R-/, "");
+      }
     },
     actualizarRegistro() {
       let datosEnviar = {
@@ -161,3 +156,112 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 30px;
+  background-color:#f4f7f6;
+}
+
+.header {
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 2.2em;
+  color:#2c3e50;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.header h1 span {
+  font-weight: normal;
+  font-size: 0.9em;
+  margin-right: 15px;
+  color:#1abc9c;
+}
+
+/* Formulario */
+.form-container {
+  background:#fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6pxrgba(0,0,0,0.1);
+}
+
+.form-container h2 {
+  margin-bottom: 20px;
+  color:#2c3e50;
+  font-size: 1.5em;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color:#333;
+}
+
+.form-group input {
+  padding: 10px;
+  border: 1px solid#ccc;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+/* Botones */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 12px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-green {
+  background-color:#27ae60;
+  color:#fff;
+  border: none;
+}
+
+.btn-green:hover {
+  background-color:#2ecc71;
+}
+
+.btn-red-outline {
+  background: none;
+  border: 2px solid#e74c3c;
+  color:#e74c3c;
+}
+
+.btn-red-outline:hover {
+  background-color:#e74c3c;
+  color:#fff;
+}
+</style>

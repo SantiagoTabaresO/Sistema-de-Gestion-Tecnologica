@@ -154,16 +154,16 @@ export default {
 /* Sidebar */
 .sidebar {
     width: 250px;
-    background-color: #2c3e50;
+    background-color:#2c3e50;
     color: white;
     padding: 20px 0;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    box-shadow: 2px 0 5pxrgba(0,0,0,0.1);
 }
 .sidebar h3 {
     text-align: center;
     margin-bottom: 30px;
     font-size: 1.5em;
-    color: #ecf0f1;
+    color:#ecf0f1;
 }
 .menu-item {
     padding: 15px 20px;
@@ -174,11 +174,11 @@ export default {
     gap: 10px;
 }
 .menu-item:hover {
-    background-color: #34495e;
+    background-color:#34495e;
 }
 .menu-item.active {
-    background-color: #1abc9c;
-    border-left: 5px solid #2ecc71;
+    background-color:#1abc9c;
+    border-left: 5px solid#2ecc71;
     font-weight: bold;
 }
 
@@ -186,14 +186,14 @@ export default {
 .main-content {
     flex-grow: 1;
     padding: 30px;
-    background-color: #f4f7f6;
+    background-color:#f4f7f6;
 }
 .header {
     margin-bottom: 30px;
 }
 .header h1 {
     font-size: 2.5em;
-    color: #2c3e50;
+    color:#2c3e50;
     margin: 0;
     display: flex;
     align-items: center;
@@ -202,7 +202,7 @@ export default {
     font-weight: normal;
     font-size: 0.8em;
     margin-right: 15px;
-    color: #1abc9c;
+    color:#1abc9c;
 }
 
 /* Search bar */
@@ -213,7 +213,7 @@ export default {
 .search-bar input {
     padding: 10px 15px 10px 40px;
     width: 100%;
-    border: 1px solid #ccc;
+    border: 1px solid#ccc;
     border-radius: 20px;
     font-size: 1em;
     outline: none;
@@ -227,8 +227,12 @@ export default {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4pxrgba(0,0,0,0.05);
     overflow-x: auto;
+
+    max-height: 350px;
+    overflow-y: auto;
+    display: block;
 }
 .data-table {
     width: 100%;
@@ -237,24 +241,31 @@ export default {
 }
 .data-table th, .data-table td {
     padding: 12px 15px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid#eee;
 }
 .data-table th {
-    background-color: #ecf0f1;
-    color: #333;
+    background-color:#ecf0f1;
+    color:#333;
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.9em;
 }
 .data-table tr:hover {
-    background-color: #f9f9f9;
+    background-color:#f9f9f9;
+}
+
+.data-table thead {
+  position: sticky;
+  top: 0;
+  background:#ecf0f1;
+  z-index: 2;
 }
 
 /* Acciones */
 .action-section {
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid#ddd;
     display: flex;
     gap: 20px;
     align-items: flex-start;
@@ -268,37 +279,37 @@ export default {
     transition: background-color 0.3s;
 }
 .btn-purple {
-    background-color: #8e44ad;
+    background-color:#8e44ad;
     color: white;
 }
 .btn-purple:hover {
-    background-color: #9b59b6;
+    background-color:#9b59b6;
 }
 .delete-area {
-    background-color: #ffebee;
+    background-color:#ffebee;
     padding: 15px;
     border-radius: 5px;
-    border: 1px solid #e74c3c;
+    border: 1px solid#e74c3c;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 .delete-area label {
     font-weight: 600;
-    color: #c0392b;
+    color:#c0392b;
 }
 .delete-area input {
     padding: 8px;
-    border: 1px solid #e74c3c;
+    border: 1px solid#e74c3c;
     border-radius: 3px;
     font-size: 1em;
 }
 .btn-red {
-    background-color: #e74c3c;
+    background-color:#e74c3c;
     color: white;
     align-self: flex-start;
 }
 .btn-red:hover {
-    background-color: #c0392b;
+    background-color:#c0392b;
 }
 </style>

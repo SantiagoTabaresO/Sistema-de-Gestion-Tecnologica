@@ -1,72 +1,79 @@
 <template>
-  <div class="container">
-    <div class="card">
-      <div class="card-header">Formulario para Crear Ubicación</div>
-      <div class="card-body">
-        <form @submit.prevent="crearRegistro">
+  <div class="dashboard-container">
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Header -->
+      <div class="header">
+        <h1>
+          <span><i class="fas fa-map-marker-alt"></i></span> Crear Ubicación
+        </h1>
+      </div>
 
-          <div class="mb-3">
-            <label for="codigo_asignado" class="form-label">Código Asignado</label>
+      <!-- Formulario -->
+      <div class="form-container">
+        <h2>Formulario de creación</h2>
+        <form @submit.prevent="crearRegistro" class="edit-form">
+          
+          <!-- Código Asignado -->
+          <div class="form-group">
+            <label for="codigo_asignado">Código Asignado</label>
             <input
               type="text"
               required
-              class="form-control"
               id="codigo_asignado"
               v-model="ubicacion.codigo_asignado"
             />
-            <div v-if="errorCodigo" class="text-danger mt-1">
+            <div v-if="errorCodigo" class="error-text">
               {{ errorCodigo }}
             </div>
           </div>
 
-          <div class="mb-3">
-            <label for="nombre_ubicacion" class="form-label">Nombre de la Ubicación</label>
+          <!-- Nombre Ubicación -->
+          <div class="form-group">
+            <label for="nombre_ubicacion">Nombre de la Ubicación</label>
             <input
               type="text"
               required
-              class="form-control"
               id="nombre_ubicacion"
               v-model="ubicacion.nombre_ubicacion"
             />
           </div>
 
-          <div class="mb-3">
-            <label for="ubicacion" class="form-label">Ubicación</label>
+          <!-- Ubicación -->
+          <div class="form-group">
+            <label for="ubicacion">Ubicación</label>
             <input
               type="text"
               required
-              class="form-control"
               id="ubicacion"
               v-model="ubicacion.ubicacion"
             />
           </div>
 
-          <div class="mb-3">
-            <label for="telefono" class="form-label">Teléfono</label>
+          <!-- Teléfono -->
+          <div class="form-group">
+            <label for="telefono">Teléfono</label>
             <input
               type="text"
-              class="form-control"
               id="telefono"
               v-model="ubicacion.telefono"
             />
           </div>
 
-          <div class="btn-group">
-            <!-- type="submit" para disparar crearRegistro -->
-            <button 
-              type="submit"
-              class="btn btn-success"
-            >
-              Guardar
+          <!-- Botones -->
+          <div class="form-actions">
+            <button type="submit" class="btn btn-green">
+              <i class="fas fa-save"></i> Guardar
             </button>
-
-            <router-link :to="{ name: 'UbicacionesView' }" class="btn btn-danger">
-              Cancelar
+            <router-link
+              :to="{ name: 'UbicacionesView' }"
+              class="btn btn-red-outline"
+            >
+              <i class="fas fa-times"></i> Cancelar
             </router-link>
           </div>
         </form>
       </div>
-      <div class="card-footer text-muted">@IngdeSw</div>
     </div>
   </div>
 </template>
@@ -77,7 +84,7 @@ export default {
     return {
       ubicacion: {
         codigo_asignado: "",
-        nombre_ubicacion: "", // <-- inicializado con el nombre que espera el backend
+        nombre_ubicacion: "",
         ubicacion: "",
         telefono: ""
       },
@@ -85,85 +92,191 @@ export default {
     }
   },
   methods: {
-  // Validación de código duplicado
-  async validarCodigo() {
-  const codigo = this.ubicacion.codigo_asignado.trim();
-  if (!codigo) return false; // vacío no validamos aquí
+    // Validación de código duplicado
+    async validarCodigo() {
+      const codigo = this.ubicacion.codigo_asignado.trim();
+      if (!codigo) return false;
 
-  try {
-    const response = await fetch(
-      `http://localhost/sist_gestion/index.php?resource=ubicaciones&codigo=${encodeURIComponent(codigo)}`
-    );
+      try {
+        const response = await fetch(
+          `http://localhost/sist_gestion/index.php?resource=ubicaciones&codigo=${encodeURIComponent(codigo)}`
+        );
+        const datos = await response.json();
 
-    const datos = await response.json();
-
-    // datos es un objeto vacío si no existe
-    if (datos && typeof datos === 'object' && Object.keys(datos).length > 0) {
-      // Verificamos que el código coincida exactamente
-      if (datos.codigo_asignado === codigo) {
-        this.errorCodigo = "⚠️ Este código ya está registrado.";
-        return true; // existe
-      } else {
-        this.errorCodigo = null;
-        return false; // no existe
-      }
-    } else {
-      this.errorCodigo = null;
-      return false; // no existe
-    }
-  } catch (error) {
-    console.error("Error al validar el código:", error);
-    this.errorCodigo = "❌ Error al validar el código.";
-    return true; // prevenimos el guardado si hay error
-  }
-},
-
-
-  // Crear registro
-  async crearRegistro() {
-    // 1️⃣ Validación de campos vacíos
-    if (
-      !this.ubicacion.codigo_asignado.trim() ||
-      !this.ubicacion.nombre_ubicacion.trim() ||
-      !this.ubicacion.ubicacion.trim()
-    ) {
-      alert("Por favor, complete todos los campos obligatorios.");
-      return;
-    }
-
-    // 2️⃣ Validación de código duplicado antes de guardar
-    const existeCodigo = await this.validarCodigo();
-    if (existeCodigo) {
-      alert("Corrija el código asignado antes de guardar.");
-      return;
-    }
-
-    // 3️⃣ Guardar en la base de datos
-    try {
-      const respuesta = await fetch(
-        "http://localhost/sist_gestion/index.php?resource=ubicaciones&insertar=1",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(this.ubicacion)
+        if (datos && typeof datos === 'object' && Object.keys(datos).length > 0) {
+          if (datos.codigo_asignado === codigo) {
+            this.errorCodigo = "Este código ya está registrado.";
+            return true;
+          } else {
+            this.errorCodigo = null;
+            return false;
+          }
+        } else {
+          this.errorCodigo = null;
+          return false;
         }
-      );
-
-      const datosRespuesta = await respuesta.json();
-      if (datosRespuesta && Number(datosRespuesta.success) === 1) {
-        alert("Ubicación creada con éxito.");
-        this.$router.push({ name: "UbicacionesView" });
-      } else {
-        const mensaje = datosRespuesta.error || "Error al crear la ubicación.";
-        alert(mensaje);
+      } catch (error) {
+        console.error("Error al validar el código:", error);
+        this.errorCodigo = "Error al validar el código.";
+        return true;
       }
-    } catch (error) {
-      console.error("Error creando registro:", error);
-      alert("Error al crear la ubicación.");
+    },
+
+    // Crear registro
+    async crearRegistro() {
+      if (
+        !this.ubicacion.codigo_asignado.trim() ||
+        !this.ubicacion.nombre_ubicacion.trim() ||
+        !this.ubicacion.ubicacion.trim()
+      ) {
+        alert("Por favor, complete todos los campos obligatorios.");
+        return;
+      }
+
+      const existeCodigo = await this.validarCodigo();
+      if (existeCodigo) {
+        alert("Corrija el código asignado antes de guardar.");
+        return;
+      }
+
+      try {
+        const respuesta = await fetch(
+          "http://localhost/sist_gestion/index.php?resource=ubicaciones&insertar=1",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(this.ubicacion)
+          }
+        );
+
+        const datosRespuesta = await respuesta.json();
+        if (datosRespuesta && Number(datosRespuesta.success) === 1) {
+          alert("Ubicación creada con éxito.");
+          this.$router.push({ name: "UbicacionesView" });
+        } else {
+          const mensaje = datosRespuesta.error || "Error al crear la ubicación.";
+          alert(mensaje);
+        }
+      } catch (error) {
+        console.error("Error creando registro:", error);
+        alert("Error al crear la ubicación.");
+      }
     }
   }
-}
-
-
 }
 </script>
+
+<style scoped>
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 30px;
+  background-color:#f4f7f6;
+}
+
+.header {
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 2.2em;
+  color:#2c3e50;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.header h1 span {
+  font-weight: normal;
+  font-size: 0.9em;
+  margin-right: 15px;
+  color:#1abc9c;
+}
+
+/* Formulario */
+.form-container {
+  background:#fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6pxrgba(0,0,0,0.1);
+}
+
+.form-container h2 {
+  margin-bottom: 20px;
+  color:#2c3e50;
+  font-size: 1.5em;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color:#333;
+}
+
+.form-group input {
+  padding: 10px;
+  border: 1px solid#ccc;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.error-text {
+  color:#e74c3c;
+  margin-top: 5px;
+  font-size: 0.9em;
+}
+
+/* Botones */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 12px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-green {
+  background-color:#27ae60;
+  color:#fff;
+  border: none;
+}
+
+.btn-green:hover {
+  background-color:#2ecc71;
+}
+
+.btn-red-outline {
+  background: none;
+  border: 2px solid#e74c3c;
+  color:#e74c3c;
+}
+
+.btn-red-outline:hover {
+  background-color:#e74c3c;
+  color:#fff;
+}
+</style>
