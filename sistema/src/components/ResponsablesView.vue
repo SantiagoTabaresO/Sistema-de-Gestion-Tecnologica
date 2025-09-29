@@ -1,218 +1,302 @@
 <template>
-    <div id="app-layout" class="d-flex">
-        
-        <div class="sidebar bg-light p-3 border-end">
-            <h2 class="mb-5 text-dark">SyncLab</h2>
-            <ul class="list-unstyled">
-                <li><a href="#" class="text-dark d-block py-2">🏠 Inicio</a></li>
-                <li><a href="#" class="text-dark d-block py-2">📍 Ubicaciones</a></li>
-                <li><a href="#" class="text-dark d-block py-2">🩺 Equipo médico</a></li>
-                <li class="active-link"><a href="#" class="d-block py-2 text-decoration-none">👤 Responsables</a></li>
-            </ul>
-        </div>
-        
-        <div class="main-content flex-grow-1 p-4">
-            
-            <div class="container-fluid px-0 main-container">
-                
-                <div class="header d-flex justify-content-between align-items-center mb-4">
-                    <h1>👥 Responsables por equipo</h1>
-                </div>
+  <div class="dashboard-container">
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Header -->
+      <div class="header">
+        <h1><span><i class="fas fa-user-tag"></i></span> Responsables por equipo</h1>
+      </div>
 
-                <div class="mb-4">
-                    <div class="input-group input-group-lg">
-                        <input type="text" class="form-control" placeholder="Buscar por nombre, documento de identidad o código asignado 🔍" aria-label="Búsqueda"/>
-                        <button class="btn btn-primary" type="button" id="button-addon2">Buscar</button> 
-                    </div>
-                </div>
+      <!-- Search -->
+      <div class="search-bar">
+        <input
+          type="text"
+          v-model="busqueda"
+          placeholder="Buscar por nombre, documento de identidad o código asignado 🔍"
+        />
+      </div>
 
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white">
-                        <h4 class="mb-0">Listado de Responsables ({{ responsables.length }} registros)</h4>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover m-0">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">CÓDIGO</th>
-                                        <th scope="col">DOCUMENTO DE IDENTIDAD</th>
-                                        <th scope="col">NOMBRE Y APELLIDOS</th>
-                                        <th scope="col">CARGO</th>
-                                        <th scope="col">TELÉFONO</th>
-                                        <th scope="col">ACCIONES</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="responsable in responsables" :key="responsable.id">
-                                        <td>{{ responsable.id }}</td>
-                                        <td>{{ responsable.codigo_asignado }}</td>
-                                        <td>{{ responsable.documento_identidad }}</td>
-                                        <td>{{ responsable.nombre_apellidos }}</td>
-                                        <td>{{ responsable.cargo }}</td>
-                                        <td>{{ responsable.telefono }}</td>
-                                        <td>
-                                            <router-link 
-                                                v-if="responsable.id"
-                                                :to="{name:'EditarRespView', params:{id:responsable.id}}" 
-                                                class="btn btn-sm btn-outline-secondary">
-                                                Editar
-                                            </router-link>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            
-                            <div v-if="responsables.length === 0" class="text-center p-4 text-muted">
-                                No se encontraron responsables.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <router-link 
-                    :to="{name:'EditarRespView'}" 
-                    class="btn btn-primary btn-lg create-update-btn mb-4">
-                    + CREAR / ACTUALIZAR REGISTRO
+      <!-- Table -->
+      <div class="table-container">
+        <h2>Listado de Responsables ({{ responsables.length }} registros)</h2>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Documento de identidad</th>
+              <th>Nombre y apellidos</th>
+              <th>Cargo</th>
+              <th>Teléfono</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="responsable in responsablesFiltrados" :key="responsable.id">
+              <td>{{ responsable.codigo_asignado }}</td>
+              <td>{{ responsable.documento_identidad }}</td>
+              <td>{{ responsable.nombre_apellidos }}</td>
+              <td>{{ responsable.cargo }}</td>
+              <td>{{ responsable.telefono }}</td>
+              <td>
+                <router-link
+                  :to="{ name: 'EditarRespView', params: { id: responsable.id }}"
+                  class="btn btn-sm btn-outline-secondary"
+                >
+                  Editar
                 </router-link>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-
-                <div class="eliminar-container p-4 border rounded shadow-sm mt-5">
-                    <p>
-                        <strong>Escriba el "*código*" asignado del registro a "</strong><span class="text-danger">**ELIMINAR**</span>**":**
-                    </p>
-                    <div class="d-flex align-items-center">
-                        <input 
-                            type="text" 
-                            class="form-control me-2" 
-                            placeholder="Ej: R-001" 
-                            v-model="codigoAEliminar"
-                        />
-                        <button 
-                            type="button" 
-                            class="btn btn-danger btn-lg eliminar-btn" 
-                            @click="borrarResponsablePorCodigo"
-                            :disabled="!codigoAEliminar">
-                            ELIMINAR ❌
-                        </button>
-                    </div>
-                </div>
-                
-            </div>
+        <div v-if="responsablesFiltrados.length === 0" class="text-center p-4 text-muted">
+          No se encontraron responsables.
         </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-section">
+        <router-link :to="{ name: 'EditarRespView' }" class="btn btn-purple">
+          <i class="fas fa-plus"></i> CREAR REGISTRO
+        </router-link>
+
+        <div class="delete-area">
+          <label for="codigo-eliminar">
+            Escriba el <strong>código</strong> asignado del registro a
+            <span class="text-danger">ELIMINAR</span>:
+          </label>
+          <input
+            type="text"
+            id="codigo-eliminar"
+            v-model="codigoAEliminar"
+            placeholder="Ej: R-001"
+          />
+          <button
+            class="btn btn-red"
+            @click="borrarResponsablePorCodigo"
+            :disabled="!codigoAEliminar"
+          >
+            <i class="fas fa-trash-alt"></i> ELIMINAR
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-    export default{
-        data(){
-            return{
-                responsables: [],
-                codigoAEliminar: '' 
-            }
-        },
-        created:function(){
-            this.consultarResponsables();
-        },
-        methods:{
-            consultarResponsables(){
-                // URL corregida y funcionando
-                fetch('http://localhost/sist_gestion/index.php?resource=responsables')
-                .then(respuesta => respuesta.json())
-                .then((datosRespuesta)=>{
-                    console.log('Datos de Responsables recibidos:', datosRespuesta)
-                    
-                    if(Array.isArray(datosRespuesta)){
-                        this.responsables = datosRespuesta;
-                    } 
-                    else {
-                         this.responsables = [];
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al consultar responsables:', error);
-                })
-            },
-            
-            borrarResponsablePorCodigo(){
-                const codigo = this.codigoAEliminar;
-                if (!codigo) return;
-
-                const responsable = this.responsables.find(r => r.codigo_asignado === codigo);
-                
-                if (responsable && responsable.id) {
-                    if (confirm(`¿Está seguro de eliminar al responsable con código ${codigo}?`)) {
-                        fetch(`http://localhost/sist_gestion/index.php?resource=responsables&borrar=${responsable.id}`)
-                        .then(respuesta => respuesta.json())
-                        .then((datosRespuesta)=>{
-                            console.log('Respuesta del borrado:', datosRespuesta);
-                            this.consultarResponsables(); 
-                            this.codigoAEliminar = ''; 
-                        })
-                        .catch(error => {
-                            console.error('Error al borrar responsable:', error);
-                        });
-                    }
-                } else {
-                    alert(`No se encontró un responsable con el código: ${codigo} o el registro no tiene ID.`);
-                }
-            }
-        }
+export default {
+  data() {
+    return {
+      responsables: [],
+      codigoAEliminar: '',
+      busqueda: ''
     }
+  },
+  created() {
+    this.consultarResponsables()
+  },
+  computed: {
+    responsablesFiltrados() {
+      if (!this.busqueda) return this.responsables
+      const filtro = this.busqueda.toLowerCase()
+      return this.responsables.filter(r =>
+        r.nombre_apellidos.toLowerCase().includes(filtro) ||
+        r.documento_identidad.toLowerCase().includes(filtro) ||
+        r.codigo_asignado.toLowerCase().includes(filtro)
+      )
+    }
+  },
+  methods: {
+    consultarResponsables() {
+      fetch('http://localhost/sist_gestion/index.php?resource=responsables')
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            this.responsables = data
+          } else {
+            this.responsables = []
+          }
+        })
+        .catch(err => console.error('Error al consultar responsables:', err))
+    },
+    borrarResponsablePorCodigo() {
+      const codigo = this.codigoAEliminar
+      if (!codigo) return
+      const responsable = this.responsables.find(r => r.codigo_asignado === codigo)
+      if (responsable && responsable.id) {
+        if (confirm(`¿Está seguro de eliminar al responsable con código ${codigo}?`)) {
+          fetch(`http://localhost/sist_gestion/index.php?resource=responsables&borrar=${responsable.id}`)
+            .then(res => res.json())
+            .then(() => {
+              this.consultarResponsables()
+              this.codigoAEliminar = ''
+            })
+            .catch(err => console.error('Error al borrar responsable:', err))
+        }
+      } else {
+        alert(`No se encontró un responsable con el código: ${codigo}`)
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>
-/* Estilos para la nueva interfaz */
-#app-layout {
-    /* Permitir que el contenido principal haga scroll si es necesario */
-    display: flex;
-    min-height: 100vh; 
+/* --------- Estructura General --------- */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f7f6;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+/* --------- Sidebar --------- */
 .sidebar {
-    width: 250px;
-    background-color: #f8f9fa !important; /* Gris claro/blanco */
-    height: 100vh; /* Ocupa la altura completa de la ventana */
-    position: sticky; 
-    top: 0;
-    overflow-y: auto; /* Permite scroll si hay muchos ítems */
+  width: 250px;
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px 0;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
 }
-.sidebar a {
-    color: #212529 !important; 
+.sidebar h3 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 1.5em;
+  color: #ecf0f1;
 }
-.active-link {
-    background-color: #007bff;
-    border-radius: 5px;
+.menu-item {
+  padding: 15px 20px;
+  cursor: pointer;
+  border-left: 5px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.active-link a {
-    color: white !important;
-    font-weight: bold;
+.menu-item:hover {
+  background-color: #34495e;
 }
+.menu-item.active {
+  background-color: #1abc9c;
+  border-left: 5px solid #2ecc71;
+  font-weight: bold;
+}
+
+/* --------- Main Content --------- */
 .main-content {
-    background-color: #f4f5f7; 
-    padding-bottom: 50px !important; /* Espacio extra abajo */
+  flex-grow: 1;
+  padding: 30px;
 }
-/* Centrar la tabla y contenido principal */
-.main-container {
-    max-width: 1200px; 
-    margin: 0 auto; 
+.header {
+  margin-bottom: 30px;
 }
-h1 {
-    color: #007bff;
+.header h1 {
+  font-size: 2.5em;
+  color: #2c3e50;
+  margin: 0;
+  display: flex;
+  align-items: center;
 }
-.create-update-btn {
-    background-color: #9c27b0;
-    border-color: #9c27b0;
-    width: 300px;
-    font-weight: bold;
+.header h1 span {
+  font-size: 0.8em;
+  margin-right: 15px;
+  color: #1abc9c;
 }
-.eliminar-container {
-    background-color: #fff3f5;
-    border: 1px solid #dc3545 !important;
-    max-width: 600px; 
+
+/* --------- Search Bar --------- */
+.search-bar {
+  margin-bottom: 20px;
 }
-.eliminar-btn {
-    width: 150px;
-    font-weight: bold;
+.search-bar input {
+  padding: 10px 15px 10px 40px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 1em;
+  outline: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="%23999" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: 10px center;
+}
+
+/* --------- Table --------- */
+.table-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  overflow-x: auto;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.data-table th, .data-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+}
+.data-table th {
+  background-color: #ecf0f1;
+  color: #333;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9em;
+}
+.data-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* --------- Actions --------- */
+.action-section {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+.btn-purple {
+  background-color: #8e44ad;
+  color: white;
+}
+.btn-purple:hover {
+  background-color: #9b59b6;
+}
+.delete-area {
+  background-color: #ffebee;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #e74c3c;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.delete-area label {
+  font-weight: 600;
+  color: #c0392b;
+}
+.delete-area input {
+  padding: 8px;
+  border: 1px solid #e74c3c;
+  border-radius: 3px;
+  font-size: 1em;
+}
+.btn-red {
+  background-color: #e74c3c;
+  color: white;
+  align-self: flex-start;
+}
+.btn-red:hover {
+  background-color: #c0392b;
 }
 </style>

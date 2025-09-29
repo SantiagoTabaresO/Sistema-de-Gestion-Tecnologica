@@ -45,6 +45,19 @@ if (isset($_GET["resource"]) && $_GET["resource"] === "ubicaciones") {
         exit();
     }
 
+    // CONSULTAR POR CÓDIGO
+    if (isset($_GET["codigo"])) {
+        $codigo = esc($conexionBD, $_GET["codigo"]);
+        $sql = mysqli_query($conexionBD, "SELECT * FROM ubicaciones WHERE codigo_asignado='$codigo'");
+        if (mysqli_num_rows($sql) > 0) {
+            echo json_encode(mysqli_fetch_assoc($sql)); // devuelve el registro encontrado
+        } else {
+            echo json_encode([]); // devuelve vacío si no existe
+        }
+        exit();
+    }
+
+
     // ELIMINAR
     if (isset($_GET["borrar"])) {
         $id = intval($_GET["borrar"]);
@@ -54,6 +67,20 @@ if (isset($_GET["resource"]) && $_GET["resource"] === "ubicaciones") {
     }
 
     // INSERTAR
+    // if (isset($_GET["insertar"])) {
+    //     $data = json_decode(file_get_contents("php://input"));
+    //     $codigo = esc($conexionBD, $data->codigo_asignado);
+    //     $nombre = esc($conexionBD, $data->nombre_ubicacion);
+    //     $ubic = esc($conexionBD, $data->ubicacion);
+    //     $tel = esc($conexionBD, $data->telefono);
+
+    //     $sql = mysqli_query($conexionBD, "INSERT INTO ubicaciones (codigo_asignado,nombre_ubicacion,ubicacion,telefono)
+    //     VALUES ('$codigo','$nombre','$ubic','$tel')");
+    //     echo json_encode(["success" => $sql ? 1 : 0]);
+    //     exit();
+    // }
+
+    // INSERTAR
     if (isset($_GET["insertar"])) {
         $data = json_decode(file_get_contents("php://input"));
         $codigo = esc($conexionBD, $data->codigo_asignado);
@@ -61,11 +88,19 @@ if (isset($_GET["resource"]) && $_GET["resource"] === "ubicaciones") {
         $ubic = esc($conexionBD, $data->ubicacion);
         $tel = esc($conexionBD, $data->telefono);
 
+        // Verificar si ya existe ese código
+        $check = mysqli_query($conexionBD, "SELECT id FROM ubicaciones WHERE codigo_asignado='$codigo'");
+        if (mysqli_num_rows($check) > 0) {
+            echo json_encode(["success" => 0, "error" => "El código ya existe"]);
+            exit();
+        }
+
         $sql = mysqli_query($conexionBD, "INSERT INTO ubicaciones (codigo_asignado,nombre_ubicacion,ubicacion,telefono)
         VALUES ('$codigo','$nombre','$ubic','$tel')");
         echo json_encode(["success" => $sql ? 1 : 0]);
         exit();
     }
+
 
     // ACTUALIZAR
     if (isset($_GET["actualizar"])) {
