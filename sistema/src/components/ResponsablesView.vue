@@ -57,7 +57,7 @@
 
       <!-- Actions -->
       <div class="action-section">
-        <router-link :to="{ name: 'EditarRespView' }" class="btn btn-purple">
+        <router-link :to="{ name: 'CrearRespView' }" class="btn btn-purple">
           <i class="fas fa-plus"></i> CREAR REGISTRO
         </router-link>
 
@@ -125,35 +125,26 @@ export default {
         })
         .catch(err => console.error('Error al consultar responsables:', err))
     },
-    async borrarResponsablePorCodigo() {
-      const codigo = (this.codigoAEliminar || '').trim()
-      if (!codigo) return
+    
+    borrarResponsablePorCodigo() {
+            const codigo = this.codigoAEliminar;
+            const ubicacion = this.responsables.find(u => u.codigo_asignado === codigo);
 
-      if (!confirm(`¿Está seguro de eliminar al responsable con código ${codigo}?`)) return
-
-      try {
-        const resp = await fetch(
-        `http://localhost/sist_gestion/index.php?resource=responsables&borrar=${encodeURIComponent(codigo)}`,
-        { method: 'GET' }
-        )
-
-        const datos = await resp.json()
-        console.log('Respuesta borrado:', datos)
-
-        if (datos && (datos.success === true || datos.success === 1 || datos.success === "1")) {
-        this.consultarResponsables()
-        this.codigoAEliminar = ''
-        alert(datos.message || 'Registro eliminado correctamente.')
-        } else {
-        const mensaje = datos && datos.message ? datos.message : 'No se pudo eliminar el registro (no encontrado).'
-        alert(mensaje)
+            if (ubicacion && ubicacion.id) {
+                if (confirm(`¿Está seguro de eliminar el Responsable con código ${codigo}?`)) {
+                    fetch(`http://localhost/sist_gestion/index.php?resource=responsables&borrar=${ubicacion.id}`)
+                        .then(res => res.json())
+                        .then(() => {
+                            this.consultarResponsables();
+                            this.codigoAEliminar = '';
+                        })
+                        .catch(err => console.error('Error al borrar responsable:', err));
+                }
+            } else {
+                alert(`No se encontró un Responsable con el código: ${codigo}.`);
+            }
         }
 
-      } catch (err) {
-        console.error('Error al borrar responsable:', err)
-        alert('Error al eliminar el registro. Revisa la consola y network.')
-      }
-    }
   }
 }
 </script>
