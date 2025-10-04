@@ -79,7 +79,7 @@ export default {
       const idEquipo = this.$route.params.id;
       try {
         const res = await fetch(
-          `http://localhost/equipos/index.php?resource=equipos&consultar=${idEquipo}`
+          `http://localhost/sist_gestion/index.php?resource=equipos&consultar=${idEquipo}`
         );
         const datosRespuesta = await res.json();
         if (datosRespuesta && datosRespuesta.id) {
@@ -92,7 +92,7 @@ export default {
     },
     async cargarUbicaciones() {
       try {
-        const res = await fetch("http://localhost/equipos/index.php?resource=ubicaciones");
+        const res = await fetch("http://localhost/sist_gestion/index.php?resource=ubicaciones");
         this.ubicaciones = await res.json();
       } catch (err) {
         console.error("Error cargando ubicaciones", err);
@@ -100,7 +100,7 @@ export default {
     },
     async cargarResponsables() {
       try {
-        const res = await fetch("http://localhost/equipos/index.php?resource=responsables");
+        const res = await fetch("http://localhost/sist_gestion/index.php?resource=responsables");
         this.responsables = await res.json();
       } catch (err) {
         console.error("Error cargando responsables", err);
@@ -118,7 +118,7 @@ export default {
 
       try {
         const res = await fetch(
-          `http://localhost/equipos/index.php?resource=equipos&actualizar=${this.$route.params.id}`,
+          `http://localhost/sist_gestion/index.php?resource=equipos&actualizar=${this.$route.params.id}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -237,4 +237,5 @@ select:focus {
 .btn-red:hover {
   background-color: #c0392b;
 }
+
 </style>
