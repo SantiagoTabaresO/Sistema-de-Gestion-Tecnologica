@@ -207,13 +207,15 @@ if (isset($_GET["resource"]) && $_GET["resource"] === "responsables") {
 }
 
 // ---------------- EQUIPOS MÉDICOS ----------------
-if (isset($_GET["resource"]) && $_GET["resource"] === "equipos_medicos") {
+if (isset($_GET["resource"]) && $_GET["resource"] === "equipos") {
 
     if (isset($_GET["consultar"])) {
-        $id = intval($_GET["consultar"]);
-        $sql = mysqli_query($conexionBD, "SELECT * FROM equipos_medicos WHERE id=$id");
-        echo json_encode(mysqli_num_rows($sql) ? mysqli_fetch_assoc($sql) : ["success" => 0]);
+    $sql = mysqli_query($conexionBD,"SELECT * FROM equipos_medicos WHERE id=".$_GET["consultar"]);
+    if(mysqli_num_rows($sql) > 0){
+        $equipo = mysqli_fetch_assoc($sql);
+        echo json_encode($equipo);
         exit();
+    } else { echo json_encode(["success"=>0]); }
     }
 
     if (isset($_GET["borrar"])) {
