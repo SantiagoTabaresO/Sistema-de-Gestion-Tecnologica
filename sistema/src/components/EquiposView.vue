@@ -115,9 +115,9 @@ export default {
     async cargarDatos() {
       try {
         const [equiposRes, ubicRes, respRes] = await Promise.all([
-          fetch("http://localhost/equipos/index.php?resource=equipos"),
-          fetch("http://localhost/equipos/index.php?resource=ubicaciones"),
-          fetch("http://localhost/equipos/index.php?resource=responsables"),
+          fetch("http://localhost/sist_gestion/index.php?resource=equipos"),
+          fetch("http://localhost/sist_gestion/index.php?resource=ubicaciones"),
+          fetch("http://localhost/sist_gestion/index.php?resource=responsables"),
         ]);
 
         const equiposData = await equiposRes.json();
@@ -153,7 +153,7 @@ export default {
 
       if (confirm(`¿Está seguro de eliminar el equipo con número de activo ${codigo}?`)) {
         try {
-          await fetch(`http://localhost/equipos/index.php?resource=equipos&borrar=${equipo.id}`);
+          await fetch(`http://localhost/sist_gestion/index.php?resource=equipos&borrar=${equipo.id}`);
           alert("Equipo eliminado correctamente.");
           this.cargarDatos();
           this.codigoAEliminar = '';
@@ -293,3 +293,4 @@ export default {
   background-color: #c0392b;
 }
 </style>
+
