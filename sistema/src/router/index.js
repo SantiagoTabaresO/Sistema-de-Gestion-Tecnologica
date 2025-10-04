@@ -7,6 +7,9 @@ import EditarUbicacionView from '@/components/EditarUbicacionView.vue'
 import CrearUbicacionView from '@/components/CrearUbicacionView.vue'
 import CrearRespView from '@/components/CrearRespView.vue'
 import InicioView from '@/components/InicioView.vue'
+import CrearEquipoView from '@/components/CrearEquipoView.vue'
+import EditarEquipoView from '@/components/EditarEquipoView.vue'
+import EquiposView from '@/components/EquiposView.vue'
 
 const routes = [
   {
@@ -23,6 +26,10 @@ const routes = [
     path: '/ubicacionesView', 
     name: 'UbicacionesView', 
     component: UbicacionesView },
+  { 
+    path: '/EquiposView', 
+    name: 'EquiposView', 
+    component: EquiposView },
   {
     path: '/editar-responsable/:id?', // <--- DEBE INCLUIR EL PARÁMETRO DINÁMICO :id
     name: 'EditarRespView', 
@@ -34,6 +41,11 @@ const routes = [
     component: EditarUbicacionView 
   },
   {
+    path: '/equipos/editar/:id?', 
+    name: 'EditarEquipoView', 
+    component: EditarEquipoView 
+  },
+  {
     path: "/responsables/crear",
     name: "CrearUbicacionView",   
     component: CrearUbicacionView,
@@ -42,6 +54,11 @@ const routes = [
     path: "/responsables/crear",
     name: "CrearRespView",   
     component: CrearRespView,
+  },
+  {
+    path: "/equipos/crear",
+    name: "CrearEquipoView",   
+    component: CrearEquipoView
   },
   {
     path: "/inicioView",
