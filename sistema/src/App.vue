@@ -11,12 +11,11 @@
             <i class="fas fa-map-marker-alt"></i> Inicio
           </router-link>
           
-
           <router-link to="/UbicacionesView" class="menu-item" active-class="active">
             <i class="fas fa-map-marker-alt"></i> Ubicaciones
           </router-link>
 
-          <router-link to="/EquipoMedicoView" class="menu-item" active-class="active">
+          <router-link to="/EquiposView" class="menu-item" active-class="active">
             <i class="fas fa-medkit"></i> Equipo médico
           </router-link>
 
