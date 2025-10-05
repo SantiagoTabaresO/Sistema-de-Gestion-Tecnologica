@@ -129,14 +129,14 @@ export default {
     borrarResponsablePorCodigo() {
             const codigo = this.codigoAEliminar;
             const ubicacion = this.responsables.find(u => u.codigo_asignado === codigo);
-
+            console.log(ubicacion);
             if (ubicacion && ubicacion.id) {
                 if (confirm(`¿Está seguro de eliminar el Responsable con código ${codigo}?`)) {
                     fetch(`http://localhost/sist_gestion/index.php?resource=responsables&borrar=${ubicacion.id}`)
                         .then(res => res.json())
                         .then(() => {
                             this.consultarResponsables();
-                            this.codigoAEliminar = '';
+                            this.codigoAEliminar = '';      
                         })
                         .catch(err => console.error('Error al borrar responsable:', err));
                 }
