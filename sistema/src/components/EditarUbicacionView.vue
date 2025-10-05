@@ -99,8 +99,8 @@ export default {
         .catch(console.error)
     },
     agregarPrefijo() {
-      if (!this.ubicacion.codigo_asignado.startsWith("UB-")) {
-        this.ubicacion.codigo_asignado = "UB-" + this.ubicacion.codigo_asignado.replace(/^UB-/, "")
+      if (!this.ubicacion.codigo_asignado.startsWith("U")) {
+        this.ubicacion.codigo_asignado = "U" + this.ubicacion.codigo_asignado.replace(/^U/, "")
       }
     },
     actualizarRegistro() {

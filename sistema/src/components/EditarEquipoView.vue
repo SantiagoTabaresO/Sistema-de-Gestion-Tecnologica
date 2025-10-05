@@ -90,6 +90,12 @@ export default {
         console.error("Error obteniendo equipo:", err);
       }
     },
+    agregarPrefijo() {
+      if (!this.equipo.codigo_asignado.startsWith("U")) {
+        this.equipo.codigo_asignado = "U" + this.equipo.codigo_asignado.replace(/^U/, "")
+      }
+    },
+    
     async cargarUbicaciones() {
       try {
         const res = await fetch("http://localhost/sist_gestion/index.php?resource=ubicaciones");

@@ -125,9 +125,9 @@ export default {
         .catch(console.error);
     },
     agregarPrefijo() {
-      if (!this.responsable.codigo_asignado.startsWith("R-")) {
+      if (!this.responsable.codigo_asignado.startsWith("R")) {
         this.responsable.codigo_asignado =
-          "R-" + this.responsable.codigo_asignado.replace(/^R-/, "");
+          "R" + this.responsable.codigo_asignado.replace(/^R/, "");
       }
     },
     actualizarRegistro() {
